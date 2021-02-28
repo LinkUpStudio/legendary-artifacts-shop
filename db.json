@@ -1,12 +1,4 @@
 {
-  "posts": [
-    { "id": 1, "title": "json-server", "author": "typicode" }
-  ],
-  "comments": [
-    { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" },
-
   "artifacts": [
     {
       "id": 1,
@@ -56,7 +48,7 @@
     },
     {
       "id": 4,
-      "title": "Greed's Embrace <br /> Golden Plate",
+      "title": "The <br /> Ring",
       "attributes": [
         { "name": "Armour", "value": 1 },
         { "name": "Movement Speed", "value": "+5%" }
