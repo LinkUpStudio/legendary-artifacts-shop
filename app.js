@@ -27,47 +27,47 @@ class ArtifactRenderer {
     this.artifact = artifact;
   }
 
-  render(parent_div) {
-    let container_div = HTML.div({
+  render(parent) {
+    let container = HTML.div({
       classes: ["infobox-page-container"],
-      children: [this.buildArtifact_div()],
+      children: [this.artifact_tag()],
     });
 
-    parent_div.appendChild(container_div);
+    parent.appendChild(container);
   }
 
-  buildArtifact_div() {
+  artifact_tag() {
     return HTML.div({
       classes: ["item-box", "-unique"],
       children: [
-        this.buildHeader_div(),
-        this.buildStats_div(),
-        this.buildPrice_div(),
-        this.buildImage_div(),
+        this.header(),
+        this.stats(),
+        this.price(),
+        this.image(),
       ],
     });
   }
 
-  buildHeader_div() {
+  header() {
     return HTML.div({
       classes: ["header", "-double"],
       innerHTML: this.artifact.title,
     });
   }
 
-  buildStats_div() {
+  stats() {
     return HTML.div({
       classes: ["item-stats"],
       children: [
-        this.buildAttributes_div(),
-        this.buildModifiers_div(),
-        this.buildFlavour_div(),
+        this.attributes(),
+        this.modifiers(),
+        this.flavour(),
       ],
     });
   }
 
-  buildAttributes_div() {
-    let attribute_divs = this.artifact.attributes.map(attribute => {
+  attributes() {
+    let attribute_tags = this.artifact.attributes.map(attribute => {
       return HTML.div({
         children: [
           HTML.em({
@@ -84,28 +84,28 @@ class ArtifactRenderer {
       });
     });
 
-    return HTML.div({ classes: ["group"], children: attribute_divs });
+    return HTML.div({ classes: ["group"], children: attribute_tags });
   }
 
-  buildModifiers_div() {
-    let modifier_divs = this.artifact.modifiers.map(modifier => {
+  modifiers() {
+    let modifier_tags = this.artifact.modifiers.map(modifier => {
       return HTML.div({ innerHTML: modifier });
     });
 
     return HTML.div({
       classes: ["group", "tc", "-mod"],
-      children: modifier_divs,
+      children: modifier_tags,
     });
   }
 
-  buildFlavour_div() {
+  flavour() {
     return HTML.div({
       classes: ["group", "tc", "-flavour"],
       innerHTML: this.artifact.flavour_text,
     });
   }
 
-  buildPrice_div() {
+  price() {
     return HTML.div({
       classes: ["group"],
       children: [
@@ -117,7 +117,7 @@ class ArtifactRenderer {
     });
   }
 
-  buildImage_div() {
+  image() {
     let img = HTML.img();
     img.src = this.artifact.image_url;
 
@@ -125,16 +125,15 @@ class ArtifactRenderer {
   }
 }
 
-const ARTIFACTS_CONTAINER_DIV = document.getElementById("artifacts-container");
+const ARTIFACTS_CONTAINER = document.getElementById("artifacts-container");
 const API_BASE = "http://localhost:3000"
 
-let url = `${API_BASE}/artifacts`;
+const url = `${API_BASE}/artifacts`;
 
 fetch(url)
   .then(response => response.json())
   .then(artifacts => {
     artifacts.forEach(
-      artifact =>
-        new ArtifactRenderer(artifact).render(ARTIFACTS_CONTAINER_DIV)
+      artifact => new ArtifactRenderer(artifact).render(ARTIFACTS_CONTAINER)
     );
   });
