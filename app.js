@@ -125,15 +125,19 @@ class ArtifactRenderer {
   }
 }
 
-const ARTIFACTS_CONTAINER = document.getElementById("artifacts-container");
-const API_BASE = "http://localhost:3000"
+function main() {
+  const artifacts_container = document.getElementById("artifacts-container");
+  const api_base = "http://localhost:3000"
 
-const url = `${API_BASE}/artifacts`;
+  const artifacts_url = `${api_base}/artifacts`;
 
-fetch(url)
-  .then(response => response.json())
-  .then(artifacts => {
-    artifacts.forEach(
-      artifact => new ArtifactRenderer(artifact).render(ARTIFACTS_CONTAINER)
-    );
-  });
+  fetch(artifacts_url)
+    .then(response => response.json())
+    .then(artifacts => {
+      artifacts.forEach(
+        artifact => new ArtifactRenderer(artifact).render(artifacts_container)
+      );
+    });
+}
+
+main();
