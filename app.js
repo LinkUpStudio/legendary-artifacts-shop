@@ -1,4 +1,7 @@
 class HTML {
+  // Destructuring assignment is used here
+  // (Unpacking fields from objects passed as a function parameter)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Destructuring_assignment
   static tag(
     {
       type = "div",
@@ -17,6 +20,9 @@ class HTML {
     return tag;
   }
 
+  // Spread syntax is used here
+  // (Spread in object literals)
+  // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
   static div(opts = {}) { return this.tag({ ...opts, type: "div" }); }
   static em(opts = {}) { return this.tag({ ...opts, type: "em" }); }
   static img(opts = {}) { return this.tag({ ...opts, type: "img" }); }
@@ -125,6 +131,7 @@ class ArtifactRenderer {
   }
 }
 
+// Finally, the code! :D
 function main() {
   const artifacts_container = document.getElementById("artifacts-container");
   const api_base = "http://localhost:3000"
