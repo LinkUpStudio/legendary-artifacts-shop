@@ -145,6 +145,50 @@ function main() {
         artifact => new ArtifactRenderer(artifact).render(artifacts_container)
       );
     });
+
+  const titleInput = document.getElementById("title");
+  const armourInput = document.getElementById("armour");
+  const flavourInput = document.getElementById("flavour");
+  const priceInput = document.getElementById("price");
+  const imageInput = document.getElementById("image");
+
+  function artifactFromInputs() {
+    return {
+      title: titleInput.value,
+      attributes: [{ name: "Armour", value: armourInput.value }],
+      modifiers: ["+10% to Heart Warmth"],
+      flavour_text: flavourInput.value,
+      image_url: imageInput.value,
+      price: `${priceInput.value} Schmeckles`,
+    };
+  }
+
+  const previewContainer = document.getElementById("new-artifact-preview");
+
+  function renderArtifactPreview() {
+    previewContainer.innerHTML = "";
+    new ArtifactRenderer(artifactFromInputs()).render(previewContainer);
+  }
+
+  [titleInput, armourInput, flavourInput, priceInput, imageInput]
+    .forEach(input => input.addEventListener('change', renderArtifactPreview));
+
+  const form = document.getElementById("new-artifact-form");
+
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+
+    const artifact = artifactFromInputs();
+    fetch(artifacts_url, {
+      method: 'POST',
+      mode: 'cors',
+      cache: 'no-cache',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(artifact)
+    });
+
+    new ArtifactRenderer(artifactFromInputs()).render(artifacts_container);
+  });
 }
 
 main();
