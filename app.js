@@ -10,7 +10,7 @@ class HTML {
       children = []
     } = {}
   ) {
-    let tag = document.createElement(type);
+    const tag = document.createElement(type);
 
     tag.classList.add(...classes)
     tag.innerHTML = innerHTML;
@@ -25,7 +25,11 @@ class HTML {
   // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
   static div(opts = {}) { return this.tag({ ...opts, type: "div" }); }
   static em(opts = {}) { return this.tag({ ...opts, type: "em" }); }
-  static img(opts = {}) { return this.tag({ ...opts, type: "img" }); }
+  static img(src, opts = {}) {
+    const img = this.tag({ ...opts, type: "img" });
+    img.src = src;
+    return img;
+  }
 }
 
 class ArtifactRenderer {
@@ -34,7 +38,7 @@ class ArtifactRenderer {
   }
 
   render(parent) {
-    let container = HTML.div({
+    const container = HTML.div({
       classes: ["infobox-page-container"],
       children: [this.artifact_tag()],
     });
@@ -73,7 +77,7 @@ class ArtifactRenderer {
   }
 
   attributes() {
-    let attribute_tags = this.artifact.attributes.map(attribute => {
+    const attribute_tags = this.artifact.attributes.map(attribute => {
       return HTML.div({
         children: [
           HTML.em({
@@ -94,7 +98,7 @@ class ArtifactRenderer {
   }
 
   modifiers() {
-    let modifier_tags = this.artifact.modifiers.map(modifier => {
+    const modifier_tags = this.artifact.modifiers.map(modifier => {
       return HTML.div({ innerHTML: modifier });
     });
 
@@ -124,8 +128,7 @@ class ArtifactRenderer {
   }
 
   image() {
-    let img = HTML.img();
-    img.src = this.artifact.image_url;
+    const img = HTML.img(this.artifact.image_url);
 
     return HTML.div({ classes: ["group", "artifact-image"], children: [img] });
   }
@@ -138,6 +141,7 @@ function main() {
 
   const artifacts_url = `${api_base}/artifacts`;
 
+  // https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch
   fetch(artifacts_url)
     .then(response => response.json())
     .then(artifacts => {
@@ -187,7 +191,7 @@ function main() {
       body: JSON.stringify(artifact)
     });
 
-    new ArtifactRenderer(artifactFromInputs()).render(artifacts_container);
+    new ArtifactRenderer(artifact).render(artifacts_container);
   });
 }
 
