@@ -1,5 +1,5 @@
-class ArtifactRendedrer {
-  static buildTag(
+class HTML {
+  static tag(
     {
       type = "div",
       classes = [],
@@ -17,12 +17,18 @@ class ArtifactRendedrer {
     return tag;
   }
 
+  static div(opts = {}) { return this.tag({ ...opts, type: "div" }); }
+  static em(opts = {}) { return this.tag({ ...opts, type: "em" }); }
+  static img(opts = {}) { return this.tag({ ...opts, type: "img" }); }
+}
+
+class ArtifactRenderer {
   constructor(artifact) {
     this.artifact = artifact;
   }
 
   render(parent_div) {
-    let container_div = ArtifactRendedrer.buildTag({
+    let container_div = HTML.div({
       classes: ["infobox-page-container"],
       children: [this.buildArtifact_div()],
     });
@@ -31,7 +37,7 @@ class ArtifactRendedrer {
   }
 
   buildArtifact_div() {
-    return ArtifactRendedrer.buildTag({
+    return HTML.div({
       classes: ["item-box", "-unique"],
       children: [
         this.buildHeader_div(),
@@ -43,14 +49,14 @@ class ArtifactRendedrer {
   }
 
   buildHeader_div() {
-    return ArtifactRendedrer.buildTag({
+    return HTML.div({
       classes: ["header", "-double"],
       innerHTML: this.artifact.title,
     });
   }
 
   buildStats_div() {
-    return ArtifactRendedrer.buildTag({
+    return HTML.div({
       classes: ["item-stats"],
       children: [
         this.buildAttributes_div(),
@@ -62,20 +68,15 @@ class ArtifactRendedrer {
 
   buildAttributes_div() {
     let attribute_divs = this.artifact.attributes.map(attribute => {
-      return ArtifactRendedrer.buildTag({
+      return HTML.div({
         children: [
-          ArtifactRendedrer.buildTag({
-            type: "em",
+          HTML.em({
             classes: ["tc", "-default"],
 
             innerHTML: `${attribute.name}: `,
 
             children: [
-              ArtifactRendedrer.buildTag({
-                type: "em",
-                classes: ["tc", "-value"],
-                innerHTML: attribute.value
-              })
+              HTML.em({ classes: ["tc", "-value"], innerHTML: attribute.value })
             ]
 
           })
@@ -83,54 +84,44 @@ class ArtifactRendedrer {
       });
     });
 
-    return ArtifactRendedrer.buildTag({
-      classes: ["group"],
-      children: attribute_divs,
-    });
+    return HTML.div({ classes: ["group"], children: attribute_divs });
   }
 
   buildModifiers_div() {
     let modifier_divs = this.artifact.modifiers.map(modifier => {
-      return ArtifactRendedrer.buildTag({
-        innerHTML: modifier
-      });
+      return HTML.div({ innerHTML: modifier });
     });
 
-    return ArtifactRendedrer.buildTag({
+    return HTML.div({
       classes: ["group", "tc", "-mod"],
       children: modifier_divs,
     });
   }
 
   buildFlavour_div() {
-    return ArtifactRendedrer.buildTag({
+    return HTML.div({
       classes: ["group", "tc", "-flavour"],
       innerHTML: this.artifact.flavour_text,
     });
   }
 
   buildPrice_div() {
-    return ArtifactRendedrer.buildTag({
+    return HTML.div({
       classes: ["group"],
       children: [
-        ArtifactRendedrer.buildTag({
-          type: "em", classes: ["header"], innerHTML: "Price:&nbsp;"
-        }),
-        ArtifactRendedrer.buildTag({
-          type: "em", classes: ["header", "price"], innerHTML: this.artifact.price
+        HTML.em({ classes: ["header"], innerHTML: "Price:&nbsp;" }),
+        HTML.em({
+          classes: ["header", "price"], innerHTML: this.artifact.price
         }),
       ],
     });
   }
 
   buildImage_div() {
-    let img = ArtifactRendedrer.buildTag({type: "img"});
+    let img = HTML.img();
     img.src = this.artifact.image_url;
 
-    return ArtifactRendedrer.buildTag({
-      classes: ["group", "artifact-image"],
-      children: [img],
-    });
+    return HTML.div({ classes: ["group", "artifact-image"], children: [img] });
   }
 }
 
@@ -144,6 +135,6 @@ fetch(url)
   .then(artifacts => {
     artifacts.forEach(
       artifact =>
-        new ArtifactRendedrer(artifact).render(ARTIFACTS_CONTAINER_DIV)
+        new ArtifactRenderer(artifact).render(ARTIFACTS_CONTAINER_DIV)
     );
   });
